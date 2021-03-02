@@ -48,7 +48,14 @@
                      #'print-phrases-entry
                      #'print-translation-pair)))
     (format t "~A~%~%" (string-upcase word))
-    (mapcar printer (request-word word from to phrase))))
+    (let ((data (request-word word from to phrase)))
+      (if data
+          (progn
+            (mapcar printer data)
+            (uiop:quit 0))
+          (progn
+            (format t "Nothing found.~%")
+            (uiop:quit 0))))))
 
 (defparameter *command-line-spec*
   '((("word" #\w) :type string
