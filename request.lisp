@@ -4,7 +4,10 @@
 
 (defun load-page (string)
   (multiple-value-bind (response result)
-      (dex:get string)
+      (handler-case (dex:get string)
+        (dexador.error:http-request-bad-gateway (c)
+          (format t "Got 502 \"Bad gateway\".~%" c)
+          (uiop:quit 1)))
     (when (eql result 200)
       response)))
 
@@ -39,7 +42,7 @@
                          (list (car category)
                                (cdr
                                 (funcall #'phrases-internal
-                                         (get-trs (dex:get (fix-link (cadr category))))))))
+                                         (get-trs (load-page (fix-link (cadr category))))))))
                      :parts 8
                      (coerce
                       (lquery:$ trs ".phras a" (combine (text) (attr :href)))

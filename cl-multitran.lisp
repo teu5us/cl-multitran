@@ -95,7 +95,4 @@
        :rest-arity nil)
     (command-line-arguments:command-line-arity (c)
       (format t "~A~%" c)
-      (uiop:quit 1))
-    (dexador.error:http-request-bad-gateway (c)
-      (format t "Got 502 \"Bad gateway\".~%" c)
       (uiop:quit 1))))
