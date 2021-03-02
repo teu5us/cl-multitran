@@ -16,7 +16,9 @@ git clone https://github.com/Teu5us/cl-multitran.git
 cd cl-multitran
 ```
 
-Run `make` or, if you have roswell, you may run `ros install roswell/mtran.ros`.
+If you have roswell installed, run `make` or `ros install roswell/mtran.ros`.
+
+Otherwise, if you have a compiler (e.g. sbcl) and quicklisp, run `make LISP=sbcl`.
 
 ## License
 
