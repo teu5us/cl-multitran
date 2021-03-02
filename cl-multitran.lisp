@@ -47,7 +47,11 @@
         (printer (if phrase
                      #'print-phrases-entry
                      #'print-translation-pair)))
-    (format t "~A~%~%" (string-upcase word))
+    (format t "~A from ~A to ~A~A~%~%"
+            (string-upcase word)
+            (string-upcase l1)
+            (string-upcase l2)
+            (if phrase ": PHRASES" ""))
     (let ((data (request-word word from to phrase)))
       (if data
           (progn
