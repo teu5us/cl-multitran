@@ -1,7 +1,7 @@
 ;;;; cl-multitran.asd
 
 (asdf:defsystem #:cl-multitran
-  :description "Describe cl-multitran here"
+  :description "Load translations from multitran.com"
   :author "Pavel Stepanov"
   :license  "MIT"
   :version "0.0.1"
