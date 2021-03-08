@@ -21,7 +21,6 @@
   :build-operation "program-op"
   :build-pathname #.(ensure-directories-exist
                      (merge-pathnames ".local/bin/mtran" (user-homedir-pathname)))
-  :build-pathname "mtran"
   :entry-point "cl-multitran:main")
 
 #+sb-core-compression
