@@ -40,7 +40,11 @@
         (setf (gethash code table) number)))
     table))
 
-(defun get-word (word l1 l2 &optional (phrase nil))
+(defun default-column ()
+  (string-trim '(#\newline)
+               (uiop:run-program "tput cols" :output 'string)))
+
+(defun get-word (word l1 l2 &optional (phrase nil) fill)
   (let ((lparallel:*kernel* (lparallel:make-kernel 4))
         (from (gethash (find-symbol (string-upcase l1) :cl-multitran) *languages*))
         (to (gethash (find-symbol (string-upcase l2) :cl-multitran) *languages*))
@@ -53,13 +57,17 @@
             (string-upcase l2)
             (if phrase ": PHRASES" ""))
     (let ((data (request-word word from to phrase)))
-      (if data
-          (progn
-            (mapcar printer data)
-            (uiop:quit 0))
-          (progn
-            (format t "Nothing found.~%")
-            (uiop:quit 0))))))
+      (prog1
+          (if data
+              (progn
+                (mapcar #'(lambda (el)
+                            (apply printer el `(:fill ,fill)))
+                        data)
+                (uiop:quit 0))
+              (progn
+                (format t "Nothing found.~%")
+                (uiop:quit 0)))
+        (lparallel:end-kernel :wait t)))))
 
 (defparameter *command-line-spec*
   '((("word" #\w) :type string
@@ -74,6 +82,9 @@
     (("phrases" #\p) :type boolean
                      :optional t
                      :documentation "Load phrases instead of translations.")
+    (("col" #\c) :type string
+                 :optional t
+                 :documentation "Fill-column.")
     (("help" #\h) :type boolean
                   :optional t
                   :documentation "Show this help.")))
@@ -84,10 +95,10 @@
   (command-line-arguments:show-option-help *command-line-spec* :sort-names t)
   (uiop:quit exit-code))
 
-(defun arg-handler (&key word from to phrases help)
+(defun arg-handler (&key word from to phrases (col (default-column)) help)
   (unless (and word from to) (help :exit-code 1))
   (when help (help :exit-code 0))
-  (get-word word from to phrases))
+  (get-word word from to phrases (parse-integer col)))
 
 (defun main (&optional args)
   (handler-case

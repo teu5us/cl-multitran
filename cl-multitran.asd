@@ -11,7 +11,8 @@
                #:lquery
                #:do-urlencode
                #:lparallel
-               #:command-line-arguments)
+               #:command-line-arguments
+               #:cl-fill-string)
   :components ((:file "package")
                (:file "printer")
                (:file "request")
