@@ -9,8 +9,8 @@
                #:cl-punch
                #:plump
                #:lquery
-               #:do-urlencode
                #:lparallel
+               #:quri
                #:command-line-arguments
                #:cl-fill-string)
   :components ((:file "package")

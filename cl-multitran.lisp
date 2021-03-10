@@ -98,6 +98,7 @@
 (defun arg-handler (&key word from to phrases (col (default-column)) help)
   (unless (and word from to) (help :exit-code 1))
   (when help (help :exit-code 0))
+  (setf *the-word* word)
   (get-word word from to phrases (parse-integer col)))
 
 (defun main (&optional args)

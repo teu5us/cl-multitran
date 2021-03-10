@@ -2,17 +2,34 @@
 
 (in-package #:cl-multitran)
 
+(defparameter *the-word* nil)
+
 (defun load-page (string)
   (multiple-value-bind (response result)
       (handler-case (dex:get string)
         (dexador.error:http-request-bad-gateway (c)
           (format t "Got 502 \"Bad gateway\".~%" c)
-          (uiop:quit 1)))
+          (lparallel:end-kernel :wait nil)
+          ;; (uiop:quit 1)
+          ))
     (when (eql result 200)
       response)))
 
-(defun fix-link (query)
-  (format nil "https://multitran.com~A" query))
+(defun fix-link (broken-query)
+  (multiple-value-bind
+        (scheme userinfo host port path query fragments)
+        (quri:parse-uri
+         (format nil "https://multitran.com~A" broken-query))
+    (declare (ignorable fragments port))
+    (format nil "~A"
+            (quri:make-uri :scheme scheme
+                           :userinfo userinfo
+                           :host host
+                           :path path
+                           :query (let ((fixed-query (quri:url-decode-params query)))
+                                    (setf (cdr (assoc "s" fixed-query :test #'string=))
+                                          *the-word*)
+                                    (quri:url-encode-params fixed-query))))))
 
 (defun get-trs (html-string)
   (let ((root (parse html-string)))
@@ -20,7 +37,7 @@
 
 (defun create-word-request (word l1 l2)
   (format nil "https://www.multitran.com/m.exe?s=~A&l1=~A&l2=~A"
-          (urlencode:urlencode word) l1 l2))
+          (quri:url-encode word) l1 l2))
 
 (defmacro extract-from-table (class1 class2)
   `#'(lambda (trs)
