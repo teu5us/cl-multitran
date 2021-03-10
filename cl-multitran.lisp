@@ -99,7 +99,7 @@
   (unless (and word from to) (help :exit-code 1))
   (when help (help :exit-code 0))
   (setf *the-word* word)
-  (get-word word from to phrases (parse-integer col)))
+  (get-word word from to phrases (parse-integer col :junk-allowed t)))
 
 (defun main (&optional args)
   (handler-case
