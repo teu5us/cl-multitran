@@ -4,7 +4,7 @@ This is a small program to get word translations from multitran.com
 
 ## Install
 
-Requires [cl-fill-column](https://github.com/Teu5us/cl-fill-column).
+Requires [cl-fill-string](https://github.com/Teu5us/cl-fill-string).
 
 Clone the repository:
 
