@@ -76,7 +76,8 @@ mtran -w hello -f en -t ru -c 80 -p
                         (if (and cpa (>= cpa 16)) "-p" "")))))
       (with-current-buffer "*Multitran*"
         (org-mode)
-        (evil-define-key 'normal (current-local-map) (kbd "q") #'kill-this-buffer)))))
+        (when (and cpa (>= cpa 16))
+          (+org/close-all-folds))))))
 
 (set-popup-rule! "^\\*Multitran" :slot -1 :size 0.3 :select t)
 
