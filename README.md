@@ -45,6 +45,10 @@ mtran -w hello -f en -t ru -c 80
 mtran -w hello -f en -t ru -c 80 -p
 ```
 
+### Possible use with Emacs
+
+![](./pic/pic-selected-210311-2038-51.png)
+
 ## License
 
 MIT
