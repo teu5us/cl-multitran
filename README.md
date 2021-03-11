@@ -47,7 +47,36 @@ mtran -w hello -f en -t ru -c 80 -p
 
 ### Possible use with Emacs
 
-![](./pic/pic-selected-210311-2038-51.png)
+```emacs-lisp
+(defvar multitran-from "en")
+(defvar multitran-to "ru")
+
+(defun ask-multitran (beg end)
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                 (list nil nil)))
+  (labels ((rs (str) (string-trim (read-string str)))
+           (lang-if-cpa (str lang)
+                        (if (and cpa
+                                 (or (= cpa 4)
+                                     (> cpa 16)))
+                            (rs str)
+                          lang)))
+    (let* ((cpa (unless (null current-prefix-arg)
+                  (car current-prefix-arg)))
+           (word (if (and beg end)
+                     (buffer-substring-no-properties beg end)
+                   (or (current-word nil t) (rs "Word to translate: "))))
+           (from (lang-if-cpa "Translate from: " multitran-from))
+           (to (lang-if-cpa "Translate to: " multitran-to)))
+      (with-help-window "*Multitran*"
+        (princ (shell-command-to-string
+                (format "mtran -w \"%s\" -f %s -t %s %s"
+                        word from to
+                        (if (and cpa (>= cpa 16)) "-p" ""))))))))
+
+(global-set-key (kbd "s-m") #'ask-multitran)
+```
 
 ## License
 
