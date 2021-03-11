@@ -32,7 +32,7 @@
 
 (defun get-trs (html-string)
   (let ((root (parse html-string)))
-    (coerce (lquery:$ root "tr") 'list)))
+    (cdr (coerce (lquery:$ root "tr") 'list))))
 
 (defun create-word-request (word l1 l2)
   (format nil "https://www.multitran.com/m.exe?s=~A&l1=~A&l2=~A"
@@ -48,7 +48,14 @@
                           (coerce (lquery:$ trs ,class2) 'list))))
 
 (defun translations (trs)
-  (funcall (extract-from-table ".subj" ".trans") trs))
+  (mapcar #'list
+          (coerce (lquery:$ trs ".gray" (text)) 'list)
+          (mapcar (extract-from-table ".subj" ".trans")
+                  (remove-if #'null
+                             (split-sequence 1
+                                             trs
+                                             :key #'(lambda (tr)
+                                                      (length (lquery:$ tr (children)))))))))
 
 (defun phrases-internal (trs)
   (funcall (extract-from-table ".phraselist1" ".phraselist2") trs))

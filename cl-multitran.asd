@@ -11,6 +11,7 @@
                #:lquery
                #:lparallel
                #:quri
+               #:split-sequence
                #:command-line-arguments
                #:cl-fill-string)
   :components ((:file "package")

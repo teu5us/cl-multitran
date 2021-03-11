@@ -47,11 +47,8 @@
 (defun get-word (word l1 l2 &optional (phrase nil) fill)
   (let ((lparallel:*kernel* (lparallel:make-kernel 4))
         (from (gethash (find-symbol (string-upcase l1) :cl-multitran) *languages*))
-        (to (gethash (find-symbol (string-upcase l2) :cl-multitran) *languages*))
-        (printer (if phrase
-                     #'print-phrases-entry
-                     #'print-translation-pair)))
-    (format t "~A from ~A to ~A~A~%~%"
+        (to (gethash (find-symbol (string-upcase l2) :cl-multitran) *languages*)))
+    (format t "~A <> ~A-~A~A~%~%"
             (string-upcase word)
             (string-upcase l1)
             (string-upcase l2)
@@ -61,7 +58,7 @@
           (if data
               (progn
                 (mapcar #'(lambda (el)
-                            (apply printer el `(:fill ,fill)))
+                            (apply #'printer el `(:fill ,fill)))
                         data)
                 (uiop:quit 0))
               (progn
