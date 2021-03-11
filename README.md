@@ -45,7 +45,7 @@ mtran -w hello -f en -t ru -c 80
 mtran -w hello -f en -t ru -c 80 -p
 ```
 
-### Possible use with Emacs
+### Example use with Doom Emacs
 
 ```emacs-lisp
 (defvar multitran-from "en")
@@ -73,7 +73,12 @@ mtran -w hello -f en -t ru -c 80 -p
         (princ (shell-command-to-string
                 (format "mtran -w \"%s\" -f %s -t %s %s"
                         word from to
-                        (if (and cpa (>= cpa 16)) "-p" ""))))))))
+                        (if (and cpa (>= cpa 16)) "-p" "")))))
+      (with-current-buffer "*Multitran*"
+        (org-mode)
+        (evil-define-key 'normal (current-local-map) (kbd "q") #'kill-this-buffer)))))
+
+(set-popup-rule! "^\\*Multitran" :slot -1 :size 0.3 :select t)
 
 (global-set-key (kbd "s-m") #'ask-multitran)
 ```
