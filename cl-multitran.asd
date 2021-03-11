@@ -11,7 +11,6 @@
                #:lquery
                #:lparallel
                #:quri
-               #:cl-ppcre
                #:split-sequence
                #:command-line-arguments
                #:cl-fill-string)
