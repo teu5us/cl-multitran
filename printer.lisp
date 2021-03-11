@@ -4,10 +4,12 @@
 
 (defun print-pair (stream pair columnp atsignp smt)
   (format stream
-          (cfs:fill-string
-           (format nil "~2T- ~A :: ~A~%~^~%"
-                   (car pair)
-                   (cadr pair)) smt)))
+          (ppcre:regex-replace-all "(?i)~"
+                                   (cfs:fill-string
+                                    (format nil "~2T- ~A :: ~A~%~^~%"
+                                            (car pair)
+                                            (cadr pair)) smt)
+                                   "~~")))
 
 (defun print-translation-pair (translation-pair &key (stream t) (fill 0))
   (format stream (format nil "~~~A/cl-multitran::print-pair/" fill) translation-pair))
