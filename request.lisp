@@ -10,8 +10,7 @@
         (dexador.error:http-request-bad-gateway (c)
           (format t "Got 502 \"Bad gateway\".~%" c)
           (lparallel:end-kernel :wait nil)
-          ;; (uiop:quit 1)
-          ))
+          (uiop:quit 1)))
     (when (eql result 200)
       response)))
 
