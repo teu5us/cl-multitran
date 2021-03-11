@@ -66,7 +66,7 @@ mtran -w hello -f en -t ru -c 80 -p
                   (car current-prefix-arg)))
            (word (if (and beg end)
                      (buffer-substring-no-properties beg end)
-                   (or (current-word nil t) (rs "Word to translate: "))))
+                   (or (current-word t t) (rs "Word to translate: "))))
            (from (lang-if-cpa "Translate from: " multitran-from))
            (to (lang-if-cpa "Translate to: " multitran-to)))
       (with-help-window "*Multitran*"
