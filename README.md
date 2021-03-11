@@ -51,22 +51,29 @@ mtran -w hello -f en -t ru -c 80 -p
 (defvar multitran-from "en")
 (defvar multitran-to "ru")
 
-(defun ask-multitran (beg end)
-  (interactive (if (use-region-p)
-                   (list (region-beginning) (region-end))
-                 (list nil nil)))
-  (labels ((rs (str) (string-trim (read-string str)))
-           (lang-if-cpa (str lang)
-                        (if (and cpa
-                                 (or (= cpa 4)
-                                     (> cpa 16)))
-                            (rs str)
-                          lang)))
+(defun ask-multitran (term &optional beg end)
+  (interactive (cond
+                ((use-region-p)
+                 (list nil (region-beginning) (region-end)))
+                ((eql major-mode 'exwm-mode)
+                 (list (gui-get-primary-selection) nil nil))
+                (t
+                 (list nil nil nil))))
+  (cl-flet ((rs (str) (string-trim (read-string str)))
+            (lang-if-cpa (str lang)
+                         (if (and cpa
+                                  (or (= cpa 4)
+                                      (> cpa 16)))
+                             (rs str)
+                           lang)))
     (let* ((cpa (unless (null current-prefix-arg)
                   (car current-prefix-arg)))
-           (word (if (and beg end)
-                     (buffer-substring-no-properties beg end)
-                   (or (current-word t t) (rs "Word to translate: "))))
+           (word (cond
+                  (term term)
+                  ((and beg end)
+                   (buffer-substring-no-properties beg end))
+                  (t
+                   (or (current-word t t) (rs "Word to translate: ")))))
            (from (lang-if-cpa "Translate from: " multitran-from))
            (to (lang-if-cpa "Translate to: " multitran-to)))
       (with-help-window "*Multitran*"
@@ -82,6 +89,7 @@ mtran -w hello -f en -t ru -c 80 -p
 (set-popup-rule! "^\\*Multitran" :slot -1 :size 0.3 :select t)
 
 (global-set-key (kbd "s-m") #'ask-multitran)
+(exwm-input-set-key (kbd "s-y") #'ask-multitran)
 ```
 
 ## License
