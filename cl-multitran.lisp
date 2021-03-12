@@ -74,6 +74,9 @@
     (("col" #\c) :type string
                  :optional t
                  :documentation "Fill-column.")
+    (("langs" #\l) :type boolean
+                   :optional t
+                   :documentation "Print language codes and quit immediately.")
     (("help" #\h) :type boolean
                   :optional t
                   :documentation "Show this help.")))
@@ -84,9 +87,10 @@
   (command-line-arguments:show-option-help *command-line-spec* :sort-names t)
   (uiop:quit exit-code))
 
-(defun arg-handler (&key word from to phrases (col (default-column)) help)
-  (unless (and word from to) (help :exit-code 1))
+(defun arg-handler (&key word from to phrases (col (default-column)) langs help)
+  (unless (or langs (and word from to)) (help :exit-code 1))
   (when help (help :exit-code 0))
+  (when langs (format t "~{~A~%~}" (mapcar #'car *languages*)) (uiop:quit 0))
   (setf *the-word* word)
   (get-word word from to phrases (parse-integer col :junk-allowed t)))
 
