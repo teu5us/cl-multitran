@@ -51,15 +51,12 @@
     (let ((data (request-word word from to phrase)))
       (prog1
           (if data
-              (progn
-                (mapcar #'(lambda (el)
-                            (apply #'printer el `(:fill ,fill)))
-                        data)
-                (uiop:quit 0))
-              (progn
-                (format t "Nothing found.~%")
-                (uiop:quit 0)))
-        (lparallel:end-kernel :wait t)))))
+              (mapcar #'(lambda (el)
+                          (apply #'printer el `(:fill ,fill)))
+                      data)
+              (format t "Nothing found.~%"))
+        (lparallel:end-kernel :wait t)
+        (uiop:quit 0)))))
 
 (defparameter *command-line-spec*
   '((("word" #\w) :type string
