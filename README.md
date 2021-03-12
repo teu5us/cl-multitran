@@ -59,13 +59,16 @@ mtran -w hello -f en -t ru -c 80 -p
                  (list (gui-get-primary-selection) nil nil))
                 (t
                  (list nil nil nil))))
-  (cl-flet ((rs (str) (string-trim (read-string str)))
-            (lang-if-cpa (str lang)
-                         (if (and cpa
-                                  (or (= cpa 4)
-                                      (> cpa 16)))
-                             (rs str)
-                           lang)))
+  (cl-labels ((rs (str)
+                  (completing-read str
+                                   (split-string (shell-command-to-string "mtran -l") "\n" t)
+                                   nil t))
+              (lang-if-cpa (str lang)
+                           (if (and cpa
+                                    (or (= cpa 4)
+                                        (> cpa 16)))
+                               (rs str)
+                             lang)))
     (let* ((cpa (unless (null current-prefix-arg)
                   (car current-prefix-arg)))
            (word (cond
