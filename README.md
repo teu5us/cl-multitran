@@ -48,8 +48,8 @@ mtran -w hello -f en -t ru -c 80 -p
 ### Example use with Doom Emacs
 
 ```emacs-lisp
-(defvar multitran-from "en")
-(defvar multitran-to "ru")
+(defvar multitran-l1 "en")
+(defvar multitran-l2 "ru")
 
 (defun ask-multitran (term &optional beg end)
   (interactive (cond
@@ -77,8 +77,8 @@ mtran -w hello -f en -t ru -c 80 -p
                    (buffer-substring-no-properties beg end))
                   (t
                    (or (current-word t t) (rs "Word to translate: ")))))
-           (from (lang-if-cpa "Translate from: " multitran-from))
-           (to (lang-if-cpa "Translate to: " multitran-to)))
+           (from (lang-if-cpa "Translate from: " multitran-l1))
+           (to (lang-if-cpa "Translate to: " multitran-l2)))
       (with-help-window "*Multitran*"
         (princ (shell-command-to-string
                 (format "mtran -w \"%s\" -f %s -t %s %s"
